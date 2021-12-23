@@ -1,0 +1,22 @@
+schema: '2.0'
+stages:
+  split_data:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\split_data.R .\\\
+      params.yaml\n"
+    deps:
+    - path: data/raw/test_set_features.csv
+      md5: 6a174abc5889e8a28ec3ce3d58e944b5
+      size: 4633317
+    - path: data/raw/training_set_features.csv
+      md5: fa21e50d583f58cb061f23a5d4b399f5
+      size: 4619138
+    - path: src/split_data.R
+      md5: 51865305c2305a5d1a4a042a0c661423
+      size: 1338
+    outs:
+    - path: data/processed/test_flushot.csv
+      md5: a2a684b5fd381096b69e9bb83f5920a3
+      size: 1215944
+    - path: data/processed/train_flushot.csv
+      md5: 42ea882444c8e4777159eca90d36801e
+      size: 3632265

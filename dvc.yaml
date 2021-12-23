@@ -1,6 +1,7 @@
 stages:
   split_data:
-    cmd: C:\Program Files\R\R-4.0.4\bin\Rscript .\src\split_data.R .\params.yaml
+    cmd: |
+      "C:\Program Files\R\R-4.0.4\bin\Rscript" .\src\split_data.R .\params.yaml
     deps:
       - src/split_data.R
       - data/raw/training_set_features.csv
