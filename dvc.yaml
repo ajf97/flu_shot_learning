@@ -9,3 +9,24 @@ stages:
     outs:
       - data/processed/train_flushot.csv
       - data/processed/test_flushot.csv
+
+  train_model:
+    cmd: |
+      "C:\Program Files\R\R-4.0.4\bin\Rscript" .\src\train_model.R .\params.yaml
+    deps:
+      - data/processed/train_flushot.csv
+      - src/train_model.R
+    outs:
+      - models/model_cart.rda
+  
+  test_model:
+    cmd: |
+      "C:\Program Files\R\R-4.0.4\bin\Rscript" .\src\test_model.R .\params.yaml
+    deps:
+      - data/processed/test_flushot.csv
+      - src/test_model.R
+    metrics:
+      - reports/scores.json:
+          cache: false
+
+
