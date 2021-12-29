@@ -5,7 +5,6 @@ stages:
     deps:
       - src/split_data.R
       - data/raw/training_set_features.csv
-      - data/raw/test_set_features.csv
     outs:
       - data/processed/train_flushot.csv
       - data/processed/test_flushot.csv
@@ -29,4 +28,12 @@ stages:
       - reports/scores.json:
           cache: false
 
+  make_submission_file:
+    cmd: |
+      "C:\Program Files\R\R-4.0.4\bin\Rscript" .\src\make_submission_file.R .\params.yaml
+    deps:
+      - data/raw/test_set_features.csv
+      - src/make_submission_file.R
+    outs:
+      - reports/submission.csv
 

@@ -1,3 +1,5 @@
 {
-  "auc_roc": 0.7665
+  "auc_h1n1": 0.7068,
+  "auc_seasonal": 0.7608,
+  "auc_avg": 0.7338
 }

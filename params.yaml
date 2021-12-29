@@ -3,6 +3,8 @@ base:
   random_state: 45
   target_col_1: h1n1_vaccine
   target_col_2: seasonal_vaccine
+  id_col: respondent_id
+  submission_file_path: reports/submission.csv 
 
 split_data:
   train_path: data/processed/train_flushot.csv
