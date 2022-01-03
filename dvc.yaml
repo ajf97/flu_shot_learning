@@ -5,6 +5,7 @@ stages:
     deps:
       - src/split_data.R
       - data/raw/training_set_features.csv
+      - data/raw/training_set_labels.csv
     outs:
       - data/processed/train_flushot.csv
       - data/processed/test_flushot.csv
@@ -24,6 +25,7 @@ stages:
     deps:
       - data/processed/test_flushot.csv
       - src/test_model.R
+      - models/model_cart.rda
     metrics:
       - reports/scores.json:
           cache: false
@@ -34,6 +36,7 @@ stages:
     deps:
       - data/raw/test_set_features.csv
       - src/make_submission_file.R
+      - models/model_cart.rda
     outs:
       - reports/submission.csv
 
