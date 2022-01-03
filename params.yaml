@@ -5,11 +5,10 @@ base:
   target_col_2: seasonal_vaccine
   id_col: respondent_id
   submission_file_path: reports/submission.csv 
+  folds: 5
 
-split_data:
+preprocess_data:
   train_path: data/processed/train_flushot.csv
-  test_path : data/processed/test_flushot.csv
-  test_size: 0.25
 
 data:
   raw_data: data/raw/training_set_features.csv

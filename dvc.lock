@@ -25,15 +25,18 @@ stages:
       params.yaml\n"
     deps:
     - path: data/processed/train_flushot.csv
-      md5: 42ea882444c8e4777159eca90d36801e
-      size: 3632265
+      md5: 8a38e84ee46f948d7fe902da3be94161
+      size: 4847520
     - path: src/train_model.R
-      md5: ea17eb1aad594db58140f74211c90acf
-      size: 1411
+      md5: 7832f89e07677c12eedf4f9c6a04709b
+      size: 2722
     outs:
     - path: models/model_cart.rda
-      md5: 4df520d26c6bf3716fd06e93b7b50d33
-      size: 1708911
+      md5: ae133b7c9a8209f55af738ea8b0c0c66
+      size: 1831636
+    - path: reports/scores.json
+      md5: 153c1ad262e8bc8216a607b77351c3ce
+      size: 84
   test_model:
     cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\test_model.R .\\\
       params.yaml\n"
@@ -59,12 +62,29 @@ stages:
       md5: 6a174abc5889e8a28ec3ce3d58e944b5
       size: 4633317
     - path: models/model_cart.rda
-      md5: 4df520d26c6bf3716fd06e93b7b50d33
-      size: 1708911
+      md5: ae133b7c9a8209f55af738ea8b0c0c66
+      size: 1831636
     - path: src/make_submission_file.R
       md5: fef3a35a724dd7efa72ac77ba481d7a1
       size: 1584
     outs:
     - path: reports/submission.csv
-      md5: 034c5edbe5053aeb01a8d45cca138166
+      md5: 99351ae9622ab62eeb1eeb7b8013a19a
       size: 1201911
+  preprocess_data:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\preprocess_data.R\
+      \ .\\params.yaml\n"
+    deps:
+    - path: data/raw/training_set_features.csv
+      md5: fa21e50d583f58cb061f23a5d4b399f5
+      size: 4619138
+    - path: data/raw/training_set_labels.csv
+      md5: 50c721474af14327796774868ecaabf0
+      size: 256004
+    - path: src/preprocess_data.R
+      md5: 012b9b0e870443cee1a5d7235e407cf5
+      size: 885
+    outs:
+    - path: data/processed/train_flushot.csv
+      md5: 8a38e84ee46f948d7fe902da3be94161
+      size: 4847520

@@ -3,6 +3,8 @@ library(tidyverse)
 library(rpart)
 library(yaml)
 library(mlr)
+library(caret)
+library(jsonlite)
 
 #' Train model
 #'
@@ -14,12 +16,17 @@ library(mlr)
 
 train_model <- function(config_path) {
   config <- read_yaml(config_path)
-  train_data_path <- config$split_data$train_path
+  train_data_path <- config$preprocess_data$train_path
   target_1 <- config$base$target_col_1
   target_2 <- config$base$target_col_2
   model_path <- config$model_path
   id_col <- config$base$id_col
   labels <- c(target_1, target_2)
+  scores_path <- config$scores_path
+  random_state <- config$base$random_state
+  n_folds <- config$base$folds
+
+  set.seed(random_state)
 
   # Read training data
   data <- read_csv(train_data_path)
@@ -28,16 +35,52 @@ train_model <- function(config_path) {
   # FIX: Change this on preprocessing phase
   data <- data %>% mutate(across(where(is_character), as.factor))
   data <- data %>% mutate(across(c(target_1, target_2), as.logical))
-  
-  # Set up multilabel classification
-  flu_shot.task <- makeMultilabelTask(id = "flu_shot", data = data, target = labels)
-  lrn.br <- makeLearner("classif.rpart", predict.type = "prob")
-  lrn.br <- makeMultilabelBinaryRelevanceWrapper(lrn.br)
 
-  model <- train(lrn.br, flu_shot.task)
+  folds <- createFolds(data %>% pull(target_1), k = n_folds)
 
-  # Save model
-  saveRDS(model, file = model_path)
+  cvRPART <- lapply(folds, function(x) {
+    training_fold <- data[-x, ]
+    test_fold <- data[x, ]
+
+    flu_shot.task <- makeMultilabelTask(
+      id = "flu_shot", data = training_fold,
+      target = labels
+    )
+    lrn.br <- makeLearner("classif.rpart", predict.type = "prob")
+    lrn.br <- makeMultilabelBinaryRelevanceWrapper(lrn.br)
+
+    model <- mlr::train(lrn.br, flu_shot.task)
+
+    predictions <- predict(model, newdata = test_fold)
+
+    metrics <- getMultilabelBinaryPerformances(predictions, measures = list(auc))
+
+    auc_avg <- mean(c(metrics[[1]], metrics[[2]]))
+
+    return(list(
+      model = model, auc_avg = auc_avg, h1n1_vaccine = metrics[[1]],
+      seasonal_vaccine = metrics[[2]]
+    ))
+  })
+
+  list_auc <- lapply(cvRPART, function(x) x$auc_avg)
+  list_h1n1 <- lapply(cvRPART, function(x) x$h1n1_vaccine)
+  list_seasonal <- lapply(cvRPART, function(x) x$seasonal_vaccine)
+  index_best_model <- which(unlist(list_auc) == max(unlist(list_auc)))
+  best_model <- cvRPART[[index_best_model]]$model
+
+  # Save best model
+  saveRDS(best_model, file = model_path)
+
+  # Export metrics to JSON
+  scores <- list(
+    auc_avg = mean(unlist(list_auc)),
+    auc_h1n1_avg = mean(unlist(list_h1n1)),
+    auc_seasonal_avg = mean(unlist(list_seasonal))
+  )
+
+  export_json <- toJSON(scores, pretty = TRUE, auto_unbox = TRUE)
+  write(export_json, file = scores_path)
 }
 
 args <- commandArgs(trailingOnly = TRUE)
