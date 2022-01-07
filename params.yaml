@@ -5,7 +5,7 @@ base:
   target_col_2: seasonal_vaccine
   id_col: respondent_id
   submission_file_path: reports/submission.csv 
-  folds: 5
+  folds: 4
 
 preprocess_data:
   train_path: data/processed/train_flushot.csv

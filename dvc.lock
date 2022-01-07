@@ -25,20 +25,20 @@ stages:
       params.yaml\n"
     deps:
     - path: data/processed/train_flushot.csv
-      md5: b003c55ecaaa294db65dd8599e7ff5ae
-      size: 13566514
+      md5: c779cb9e85f6edd5af896dcbb66f6664
+      size: 15796667
     - path: params.yaml
-      md5: b14c7dde0e2330232136d22c2e068e63
+      md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/train_model.R
       md5: 6f83fb0de4d1281d14c45c317cf998d1
       size: 2781
     outs:
     - path: models/model_cart.rda
-      md5: 2f67066463c1d6c199433493c07093ab
-      size: 1761167
+      md5: 0cc10848ac8b4283c724794578e5ff0b
+      size: 1641742
     - path: reports/scores.json
-      md5: ca569c34bea7c539c727dfa946a421bb
+      md5: 303f98e5af22715edb7fc51b0847ae24
       size: 84
   test_model:
     cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\test_model.R .\\\
@@ -62,21 +62,21 @@ stages:
       \ .\\params.yaml\n"
     deps:
     - path: data/processed/test_flushot.csv
-      md5: f044e846a306d0da6d146ff633e8665c
-      size: 13518744
+      md5: 8f80395c4ed58c64c6a26cac5f551b96
+      size: 15838786
     - path: models/model_cart.rda
-      md5: 2f67066463c1d6c199433493c07093ab
-      size: 1761167
+      md5: 0cc10848ac8b4283c724794578e5ff0b
+      size: 1641742
     - path: params.yaml
-      md5: b14c7dde0e2330232136d22c2e068e63
+      md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/make_submission_file.R
-      md5: 5bfa81b561af46f5340917488616625b
-      size: 1659
+      md5: 9a5c154cb6c949a8eb8f6daea2bad6e0
+      size: 1588
     outs:
     - path: reports/submission.csv
-      md5: 60a8772275903a68924969002164c238
-      size: 1201911
+      md5: e8a38e7aa720c0329814e2a90ccabeb9
+      size: 1215374
   preprocess_data:
     cmd: "python src/preprocess_data.py --config=params.yaml\n"
     deps:
@@ -103,15 +103,15 @@ stages:
       md5: 50c721474af14327796774868ecaabf0
       size: 256004
     - path: params.yaml
-      md5: b14c7dde0e2330232136d22c2e068e63
+      md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/preprocess_data.py
-      md5: 090db3a7ad0f4470e9823f13618ff74e
-      size: 5080
+      md5: 0a265dc98445218a58504acb2716708c
+      size: 3390
     outs:
     - path: data/processed/train_flushot.csv
-      md5: b003c55ecaaa294db65dd8599e7ff5ae
-      size: 13566514
+      md5: c779cb9e85f6edd5af896dcbb66f6664
+      size: 15796667
   preprocess_test_data:
     cmd: "python src/preprocess_data.py --config=params.yaml --test=True\n"
     deps:
@@ -119,12 +119,12 @@ stages:
       md5: 6a174abc5889e8a28ec3ce3d58e944b5
       size: 4633317
     - path: params.yaml
-      md5: b14c7dde0e2330232136d22c2e068e63
+      md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/preprocess_data.py
-      md5: 090db3a7ad0f4470e9823f13618ff74e
-      size: 5080
+      md5: 0a265dc98445218a58504acb2716708c
+      size: 3390
     outs:
     - path: data/processed/test_flushot.csv
-      md5: f044e846a306d0da6d146ff633e8665c
-      size: 13518744
+      md5: 8f80395c4ed58c64c6a26cac5f551b96
+      size: 15838786

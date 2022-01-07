@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 import argparse
 
-from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder, OneHotEncoder
 from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.compose import ColumnTransformer
 
 def read_params(config_path):
     with open(config_path) as yaml_file:
@@ -18,23 +18,23 @@ def drop_na(df: pd.DataFrame) -> pd.DataFrame:
     return(df.dropna())
 
 def select_fill(df: pd.DataFrame) -> pd.DataFrame:
-    # columns_subset = ['behavioral_avoidance', 'behavioral_wash_hands', 'behavioral_large_gatherings',
-    #                   'behavioral_outside_home', 'doctor_recc_h1n1', 'doctor_recc_seasonal', 'health_worker',
-    #                   'opinion_h1n1_vacc_effective', 'opinion_h1n1_risk', 'opinion_h1n1_sick_from_vacc',
-    #                   'opinion_seas_risk', 'opinion_seas_sick_from_vacc', 'education', 'sex', 'income_poverty',
-    #                   'marital_status', 'employment_status', 'household_adults', 'employment_industry',
-    #                   'employment_occupation']
+    columns_subset = ['behavioral_avoidance', 'behavioral_wash_hands', 'behavioral_large_gatherings',
+                      'behavioral_outside_home', 'doctor_recc_h1n1', 'doctor_recc_seasonal', 'health_worker',
+                      'opinion_h1n1_vacc_effective', 'opinion_h1n1_risk', 'opinion_h1n1_sick_from_vacc',
+                      'opinion_seas_risk', 'opinion_seas_sick_from_vacc', 'education', 'sex', 'income_poverty',
+                      'marital_status', 'employment_status', 'household_adults', 'employment_industry',
+                      'employment_occupation']
 
     num_features = df.columns[df.dtypes != "object"].values
     cat_features = df.columns[df.dtypes == "object"].values
 
     num_transformer = Pipeline([
-        ('impute', SimpleImputer(missing_values=np.nan, strategy = 'median')),
+        ('impute', SimpleImputer(missing_values=np.nan, strategy = 'mean')),
         ('scale', StandardScaler())
     ])
 
     cat_transformer = Pipeline([
-        ('encode', OrdinalEncoder()),
+        ('impute', SimpleImputer(missing_values=np.nan, strategy='constant', fill_value = 'unknown'))
     ])
 
     preprocessor = ColumnTransformer([
@@ -123,12 +123,12 @@ def preprocess_data(config_path, is_test_data) -> None:
         data_path = test_preprocessed_path
 
     data_processed = select_fill(data)
-    # data_processed = ordinal_pipeline(data)
     
     if is_test_data == "False":
         data_processed = data_processed.join(train_labels)
 
     data_processed.to_csv(data_path)
+
 
 if __name__=="__main__":
     args = argparse.ArgumentParser()
