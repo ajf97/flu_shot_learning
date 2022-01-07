@@ -9,6 +9,7 @@ base:
 
 preprocess_data:
   train_path: data/processed/train_flushot.csv
+  test_path: data/processed/test_flushot.csv
 
 data:
   raw_data: data/raw/training_set_features.csv

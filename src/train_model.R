@@ -35,6 +35,7 @@ train_model <- function(config_path) {
   # FIX: Change this on preprocessing phase
   data <- data %>% mutate(across(where(is_character), as.factor))
   data <- data %>% mutate(across(c(target_1, target_2), as.logical))
+  colnames(data) <- make.names(colnames(data),unique = T)
 
   folds <- createFolds(data %>% pull(target_1), k = n_folds)
 
