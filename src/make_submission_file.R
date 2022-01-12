@@ -12,7 +12,7 @@ library(yaml)
 make_submission_file <- function(config_path) {
   config <- read_yaml(config_path)
   model_path <- config$model_path
-  test_data_path <- config$data$test_competition
+  test_data_path <- config$preprocess_data$test_path
   submission_file_path <- config$base$submission_file_path
   target_1 <- config$base$target_col_1
   target_2 <- config$base$target_col_2
@@ -20,7 +20,8 @@ make_submission_file <- function(config_path) {
 
   test_data <- read_csv(test_data_path)
   test_data <- column_to_rownames(test_data, var = id_col)
-
+  colnames(test_data) <- make.names(colnames(test_data),unique = T)
+  
   model <- readRDS(model_path)
 
   # FIX: Change this on preprocessing phase

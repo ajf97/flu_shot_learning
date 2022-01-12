@@ -5,7 +5,8 @@ library(yaml)
 library(mlr)
 library(caret)
 library(jsonlite)
-
+library(parallel)
+library(parallelMap)
 #' Train model
 #'
 #' Train CART decision tree model and save model on models folder
@@ -32,10 +33,39 @@ train_model <- function(config_path) {
   data <- read_csv(train_data_path)
   data <- column_to_rownames(data, var = id_col)
 
-  # FIX: Change this on preprocessing phase
   data <- data %>% mutate(across(where(is_character), as.factor))
   data <- data %>% mutate(across(c(target_1, target_2), as.logical))
-
+  colnames(data) <- make.names(colnames(data),unique = T)
+  
+  # FINE TUNING model
+    flu_shot.task <- makeMultilabelTask(
+      id = "flu_shot", data = data,
+      target = labels
+  )
+  
+  tree <- makeLearner("classif.rpart", predict.type = "prob")
+  lrn.br <- makeMultilabelBinaryRelevanceWrapper(tree)
+  
+  treeParamSpace <- makeParamSet(
+    makeIntegerParam("minsplit", lower = 5, upper = 20),
+    makeIntegerParam("minbucket", lower = 3, upper = 10),
+    makeNumericParam("cp", lower = 0.01, upper = 0.1),
+    makeIntegerParam("maxdepth", lower = 3, upper = 10))
+  
+  randSearch <- makeTuneControlRandom(maxit = 200)
+  cvForTuning <- makeResampleDesc("CV", iters = n_folds)
+  
+  parallelStartSocket(cpus = detectCores())
+  
+  tunedTreePars <- tuneParams(lrn.br, task = flu_shot.task,
+                              resampling = cvForTuning,
+                              par.set = treeParamSpace,
+                              control = randSearch)
+  
+  parallelStop()
+ 
+  
+  # TRAINING model
   folds <- createFolds(data %>% pull(target_1), k = n_folds)
 
   cvRPART <- lapply(folds, function(x) {
@@ -49,7 +79,9 @@ train_model <- function(config_path) {
     lrn.br <- makeLearner("classif.rpart", predict.type = "prob")
     lrn.br <- makeMultilabelBinaryRelevanceWrapper(lrn.br)
 
-    model <- mlr::train(lrn.br, flu_shot.task)
+    # Apply best hyperparameters
+    tunedTree <- setHyperPars(lrn.br, par.vals = tunedTreePars$x)
+    model <- mlr::train(tunedTree, flu_shot.task)
 
     predictions <- predict(model, newdata = test_fold)
 
@@ -62,7 +94,7 @@ train_model <- function(config_path) {
       seasonal_vaccine = metrics[[2]]
     ))
   })
-
+  
   list_auc <- lapply(cvRPART, function(x) x$auc_avg)
   list_h1n1 <- lapply(cvRPART, function(x) x$h1n1_vaccine)
   list_seasonal <- lapply(cvRPART, function(x) x$seasonal_vaccine)
