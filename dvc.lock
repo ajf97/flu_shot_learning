@@ -31,14 +31,14 @@ stages:
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/train_model.R
-      md5: e920dac1405aa0d90a61ed5f2071e947
-      size: 3844
+      md5: a13fdc8ccec70955393315e0263695e4
+      size: 3850
     outs:
     - path: models/model_cart.rda
-      md5: 6e6b61931d24d5192f241a0e92ff22bf
-      size: 1646278
+      md5: 22afc9bcf1ae9ce132211e2c2159c5dd
+      size: 1646616
     - path: reports/scores.json
-      md5: c76b905eca7f8a725feb3ecaeb68a015
+      md5: 449637bcf89248d9035f0d9a4f870e24
       size: 85
   test_model:
     cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\test_model.R .\\\
@@ -65,8 +65,8 @@ stages:
       md5: 8f80395c4ed58c64c6a26cac5f551b96
       size: 15838786
     - path: models/model_cart.rda
-      md5: 6e6b61931d24d5192f241a0e92ff22bf
-      size: 1646278
+      md5: 22afc9bcf1ae9ce132211e2c2159c5dd
+      size: 1646616
     - path: params.yaml
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
@@ -75,8 +75,8 @@ stages:
       size: 1659
     outs:
     - path: reports/submission.csv
-      md5: b9dc6e311164c4a43de02661cd532cc9
-      size: 1210808
+      md5: 5c93478c43f37d854409aa932f1a9ef5
+      size: 1218181
   preprocess_data:
     cmd: "python src/preprocess_data.py --config=params.yaml\n"
     deps:

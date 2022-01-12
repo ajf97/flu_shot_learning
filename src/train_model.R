@@ -53,7 +53,7 @@ train_model <- function(config_path) {
     makeIntegerParam("maxdepth", lower = 3, upper = 10))
   
   randSearch <- makeTuneControlRandom(maxit = 200)
-  cvForTuning <- makeResampleDesc("CV", iters = 5)
+  cvForTuning <- makeResampleDesc("CV", iters = n_folds)
   
   parallelStartSocket(cpus = detectCores())
   
