@@ -30,7 +30,6 @@ def select_fill(df: pd.DataFrame) -> pd.DataFrame:
 
     num_transformer = Pipeline([
         ('impute', SimpleImputer(missing_values=np.nan, strategy = 'mean')),
-        ('scale', StandardScaler())
     ])
 
     cat_transformer = Pipeline([

@@ -25,8 +25,8 @@ stages:
       params.yaml\n"
     deps:
     - path: data/processed/train_flushot.csv
-      md5: c779cb9e85f6edd5af896dcbb66f6664
-      size: 15796667
+      md5: 604d0a867a32098a7cc78ff6e34dbeb4
+      size: 6615906
     - path: params.yaml
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
@@ -35,8 +35,8 @@ stages:
       size: 3850
     outs:
     - path: models/model_cart.rda
-      md5: 22afc9bcf1ae9ce132211e2c2159c5dd
-      size: 1646616
+      md5: 912d49dd9ce7399b7c7b53d6b93f8eb0
+      size: 1718026
     - path: reports/scores.json
       md5: 449637bcf89248d9035f0d9a4f870e24
       size: 85
@@ -62,11 +62,11 @@ stages:
       \ .\\params.yaml\n"
     deps:
     - path: data/processed/test_flushot.csv
-      md5: 8f80395c4ed58c64c6a26cac5f551b96
-      size: 15838786
+      md5: 3ba3979b77381c1fd186de5d309dde92
+      size: 6508550
     - path: models/model_cart.rda
-      md5: 22afc9bcf1ae9ce132211e2c2159c5dd
-      size: 1646616
+      md5: 912d49dd9ce7399b7c7b53d6b93f8eb0
+      size: 1718026
     - path: params.yaml
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
@@ -106,12 +106,12 @@ stages:
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/preprocess_data.py
-      md5: 4280b785254982c81f54a90b5553caf3
-      size: 5085
+      md5: 1e093499952577e053bee7c5f7fdc902
+      size: 5048
     outs:
     - path: data/processed/train_flushot.csv
-      md5: c779cb9e85f6edd5af896dcbb66f6664
-      size: 15796667
+      md5: 604d0a867a32098a7cc78ff6e34dbeb4
+      size: 6615906
   preprocess_test_data:
     cmd: "python src/preprocess_data.py --config=params.yaml --test=True\n"
     deps:
@@ -122,9 +122,9 @@ stages:
       md5: 47426704f9ca98a48754e28d5c14252b
       size: 575
     - path: src/preprocess_data.py
-      md5: 4280b785254982c81f54a90b5553caf3
-      size: 5085
+      md5: 1e093499952577e053bee7c5f7fdc902
+      size: 5048
     outs:
     - path: data/processed/test_flushot.csv
-      md5: 8f80395c4ed58c64c6a26cac5f551b96
-      size: 15838786
+      md5: 3ba3979b77381c1fd186de5d309dde92
+      size: 6508550
