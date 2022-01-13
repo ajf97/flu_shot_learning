@@ -1,0 +1,130 @@
+schema: '2.0'
+stages:
+  split_data:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\split_data.R .\\\
+      params.yaml\n"
+    deps:
+    - path: data/raw/training_set_features.csv
+      md5: fa21e50d583f58cb061f23a5d4b399f5
+      size: 4619138
+    - path: data/raw/training_set_labels.csv
+      md5: 50c721474af14327796774868ecaabf0
+      size: 256004
+    - path: src/split_data.R
+      md5: 51865305c2305a5d1a4a042a0c661423
+      size: 1338
+    outs:
+    - path: data/processed/test_flushot.csv
+      md5: a2a684b5fd381096b69e9bb83f5920a3
+      size: 1215944
+    - path: data/processed/train_flushot.csv
+      md5: 42ea882444c8e4777159eca90d36801e
+      size: 3632265
+  train_model:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\train_model.R .\\\
+      params.yaml\n"
+    deps:
+    - path: data/processed/train_flushot.csv
+      md5: 604d0a867a32098a7cc78ff6e34dbeb4
+      size: 6615906
+    - path: params.yaml
+      md5: 47426704f9ca98a48754e28d5c14252b
+      size: 575
+    - path: src/train_model.R
+      md5: a13fdc8ccec70955393315e0263695e4
+      size: 3850
+    outs:
+    - path: models/model_cart.rda
+      md5: 912d49dd9ce7399b7c7b53d6b93f8eb0
+      size: 1718026
+    - path: reports/scores.json
+      md5: 449637bcf89248d9035f0d9a4f870e24
+      size: 85
+  test_model:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\test_model.R .\\\
+      params.yaml\n"
+    deps:
+    - path: data/processed/test_flushot.csv
+      md5: a2a684b5fd381096b69e9bb83f5920a3
+      size: 1215944
+    - path: models/model_cart.rda
+      md5: 4df520d26c6bf3716fd06e93b7b50d33
+      size: 1708911
+    - path: src/test_model.R
+      md5: 8ce3f638176be719d53a9fb6ded92489
+      size: 1556
+    outs:
+    - path: reports/scores.json
+      md5: fd40a7cde0a6036faae8cbe0fee57441
+      size: 77
+  make_submission_file:
+    cmd: "\"C:\\Program Files\\R\\R-4.0.4\\bin\\Rscript\" .\\src\\make_submission_file.R\
+      \ .\\params.yaml\n"
+    deps:
+    - path: data/processed/test_flushot.csv
+      md5: 3ba3979b77381c1fd186de5d309dde92
+      size: 6508550
+    - path: models/model_cart.rda
+      md5: 912d49dd9ce7399b7c7b53d6b93f8eb0
+      size: 1718026
+    - path: params.yaml
+      md5: 47426704f9ca98a48754e28d5c14252b
+      size: 575
+    - path: src/make_submission_file.R
+      md5: 5bfa81b561af46f5340917488616625b
+      size: 1659
+    outs:
+    - path: reports/submission.csv
+      md5: 5c93478c43f37d854409aa932f1a9ef5
+      size: 1218181
+  preprocess_data:
+    cmd: "python src/preprocess_data.py --config=params.yaml\n"
+    deps:
+    - path: data/raw/training_set_features.csv
+      md5: fa21e50d583f58cb061f23a5d4b399f5
+      size: 4619138
+    - path: data/raw/training_set_labels.csv
+      md5: 50c721474af14327796774868ecaabf0
+      size: 256004
+    - path: src/preprocess_data.py
+      md5: 19ee7ca070ace87a61ff81fbf77cb83c
+      size: 1144
+    outs:
+    - path: data/processed/train_flushot.csv
+      md5: 36e23962524e7163f024333de9087634
+      size: 1509227
+  preprocess_train_data:
+    cmd: "python src/preprocess_data.py --config=params.yaml\n"
+    deps:
+    - path: data/raw/training_set_features.csv
+      md5: fa21e50d583f58cb061f23a5d4b399f5
+      size: 4619138
+    - path: data/raw/training_set_labels.csv
+      md5: 50c721474af14327796774868ecaabf0
+      size: 256004
+    - path: params.yaml
+      md5: 47426704f9ca98a48754e28d5c14252b
+      size: 575
+    - path: src/preprocess_data.py
+      md5: 1e093499952577e053bee7c5f7fdc902
+      size: 5048
+    outs:
+    - path: data/processed/train_flushot.csv
+      md5: 604d0a867a32098a7cc78ff6e34dbeb4
+      size: 6615906
+  preprocess_test_data:
+    cmd: "python src/preprocess_data.py --config=params.yaml --test=True\n"
+    deps:
+    - path: data/raw/test_set_features.csv
+      md5: 6a174abc5889e8a28ec3ce3d58e944b5
+      size: 4633317
+    - path: params.yaml
+      md5: 47426704f9ca98a48754e28d5c14252b
+      size: 575
+    - path: src/preprocess_data.py
+      md5: 1e093499952577e053bee7c5f7fdc902
+      size: 5048
+    outs:
+    - path: data/processed/test_flushot.csv
+      md5: 3ba3979b77381c1fd186de5d309dde92
+      size: 6508550
